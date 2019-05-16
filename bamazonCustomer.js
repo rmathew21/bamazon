@@ -24,11 +24,18 @@ connection.connect(function(err) {
 });
 
 function showProducts() {
-    connection.query("Select id, product_name, department_name, price, stock_quantity FROM products",
+    connection.query("Select item_id, product_name, department_name, price, stock_quantity FROM products",
         function (error, results) {
             if (error) throw error;
             console.table(results);
-            // purchaseInquiry();
+            productChoice();
         }
     );
+}
+
+function productChoice() {
+    connection.query("SELECT * FROM products", function (err, results) {
+        if (err) throw err;
+        console.log(results);
+    });
 }
