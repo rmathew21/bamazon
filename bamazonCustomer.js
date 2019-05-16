@@ -17,6 +17,18 @@ const connection = mysql.createConnection({
 connection.connect(function(err) {
     if(err) throw err;
     console.log(`MySQL connect on ${connection.threadId}`);
-
-    connection.end();
+    console.log("\n--------------------Welcome 2 BAMAZON--------------------\n");
+    console.log("\n-------------Check out these great deals below-------------\n");
+    showProducts();
+    // connection.end();
 });
+
+function showProducts() {
+    connection.query("Select id, product_name, department_name, price, stock_quantity FROM products",
+        function (error, results) {
+            if (error) throw error;
+            console.table(results);
+            // purchaseInquiry();
+        }
+    );
+}
