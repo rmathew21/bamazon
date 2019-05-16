@@ -37,5 +37,40 @@ function productChoice() {
     connection.query("SELECT * FROM products", function (err, results) {
         if (err) throw err;
         console.log(results);
+        inquirer.prompt([
+            {
+                type: "input",
+                message: "What is the item_id of the product you would like to purchase?",
+                name: "itemId"
+            },
+            {
+                type: "input",
+                message: "How many would you like to buy?",
+                name: "stockQuantity"
+            }]).then(function (answer) {
+                const a = parseInt(parseInt(answer.itemId) - 1);
+                const b = parseInt(answer.stockQuantity) * results[a].price
+
+                if (parseInt(answer.quantity) <= results[a].stock_quantity) {
+                    connection.query("UPDATE products SET ? WHERE ?",
+                    [
+                        {
+                            stock_quantity: (parseInt(results[a].stock_quantity) - answer.quantity)
+                        },
+                        { item_id: answer.itemId }
+                    ],
+                    function (error) {
+                        if (error) throw error;
+                        console.log("Thanks for your order! Your total is " + "$" + z.toFixed(2));
+                        console.log("\n\n");
+                        connection.end();
+                    });
+                }
+                else {
+                    console.log("----------Quantity entered is larger than the available stock for this product. Please lower your amount and try again.----------");
+
+                    productChoice();
+                }
+            });
     });
 }
