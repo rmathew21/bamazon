@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const table = require('console.table');
 
 // create connection to sql database
 const connection = mysql.createConnection({
@@ -24,7 +25,7 @@ connection.connect(function(err) {
 });
 
 function showProducts() {
-    connection.query("Select item_id, product_name, department_name, price, stock_quantity FROM products",
+    connection.query("Select item_id, product_name, price, stock_quantity FROM products",
         function (error, results) {
             if (error) throw error;
             console.table(results);
@@ -48,20 +49,20 @@ function productChoice() {
                 message: "How many would you like to buy?",
                 name: "stockQuantity"
             }]).then(function (answer) {
-                const a = parseInt(parseInt(answer.itemId) - 1);
-                const b = parseInt(answer.stockQuantity) * results[a].price
+                let a = parseInt(parseInt(answer.itemId) - 1);
+                let b = parseInt(answer.stockQuantity) * results[a].price
 
-                if (parseInt(answer.quantity) <= results[a].stock_quantity) {
+                if (parseInt(answer.stockQuantity) <= results[a].stock_quantity) {
                     connection.query("UPDATE products SET ? WHERE ?",
                     [
                         {
-                            stock_quantity: (parseInt(results[a].stock_quantity) - answer.quantity)
+                            stock_quantity: (parseInt(results[a].stock_quantity) - answer.stockQuantity)
                         },
                         { item_id: answer.itemId }
                     ],
                     function (error) {
                         if (error) throw error;
-                        console.log("Thanks for your order! Your total is " + "$" + z.toFixed(2));
+                        console.log("Thanks for your order! Your total is " + "$" + b.toFixed(2));
                         console.log("\n\n");
                         connection.end();
                     });
