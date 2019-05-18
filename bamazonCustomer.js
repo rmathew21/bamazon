@@ -33,6 +33,7 @@ function showProducts() {
         }
     );
 }
+// I'm not sure why RowDataPacket is appearing in terminal
 
 function productChoice() {
     connection.query("SELECT * FROM products", function (err, results) {
